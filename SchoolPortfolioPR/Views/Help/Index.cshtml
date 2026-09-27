@@ -1,0 +1,8 @@
+@model HelpIndexView
+@{ViewData["Title"]="ตัวช่วยใช้งาน";}
+<div class="page-head"><div><p class="eyebrow">Getting started</p><h1>ตัวช่วยใช้งานทีละขั้น</h1><p class="muted">สำหรับ @Model.Role · เลือกเรื่องที่ต้องการเรียนรู้และเปิดหน้าทำงานจากแต่ละขั้นตอน</p></div></div>
+<section class="help-welcome panel"><span class="section-icon"><partial name="_Icon" model='"book"'/></span><div><h2>เริ่มจากงานที่คุณต้องการทำ</h2><p>อ่านคำแนะนำทีละขั้น เปิดหน้าทำงานในแท็บใหม่ แล้วกลับมาอ่านต่อได้ ความคืบหน้าการอ่านจดจำในเบราว์เซอร์นี้แยกตามบัญชี</p><a class="btn btn-primary" href="/Help/Wizard?topic=start">เริ่มแนะนำการใช้งาน</a></div></section>
+<div class="help-topics" data-help-key="@Model.StorageKey">
+@foreach(var topic in Model.Topics){<article class="panel help-topic" data-help-topic="@topic.Id" data-help-count="@topic.Steps.Count"><span class="section-icon"><partial name="_Icon" model="topic.Icon"/></span><h2>@topic.Title</h2><p class="muted">@topic.Description</p><small data-help-status>@topic.Steps.Count ขั้นตอน</small><a class="btn btn-outline-primary mt-3" href="/Help/Wizard?topic=@topic.Id" data-help-resume>เริ่มอ่านคำแนะนำ</a></article>}
+</div>
+@section Scripts{<script src="~/js/help.js" asp-append-version="true"></script>}

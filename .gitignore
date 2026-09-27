@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+.vs/
+artifacts/
+**/appsettings.Local.json
+**/*.user
+**/logs/
+**/TestResults/
+**/node_modules/
+.env
+.env.*
+**/secrets.json
+**/test-accounts.json
+**/TEST-ACCOUNTS.md
+**/*.pfx
+**/*.p12

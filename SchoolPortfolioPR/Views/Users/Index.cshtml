@@ -1,0 +1,3 @@
+@model List<ApplicationUser>
+@{ViewData["Title"] = "ผู้ใช้และสิทธิ์";}
+<div class="page-head"><h1>ผู้ใช้และสิทธิ์</h1><a class="btn btn-primary" asp-action="Edit">+ เพิ่มผู้ใช้</a></div><div class="panel table-responsive"><table class="table"><thead><tr><th>ชื่อ</th><th>อีเมล</th><th>บทบาท</th><th>ฝ่าย / นักเรียน</th><th>จัดการ</th></tr></thead><tbody>@foreach(var u in Model){<tr><td>@u.DisplayName</td><td>@u.Email</td><td>@(((Dictionary<string,string>)ViewBag.UserRoles).GetValueOrDefault(u.Id,"ยังไม่กำหนดบทบาท"))</td><td>@u.Department?.Name @u.Student?.Name</td><td><a asp-action="Edit" asp-route-id="@u.Id">แก้ไขบัญชีและสิทธิ์</a></td></tr>}</tbody></table></div>

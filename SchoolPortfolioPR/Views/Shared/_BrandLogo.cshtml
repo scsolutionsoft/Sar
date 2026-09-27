@@ -1,0 +1,2 @@
+@model BrandingView
+@if(Model.LogoFileId.HasValue){<img class="program-logo" src="/Branding/Logo/@Model.LogoFileId" alt="โลโก้ @Model.ProgramName"/>}else{<partial name="_Icon" model='"school"'/>}

@@ -1,0 +1,31 @@
+/* Framed role navigation and shortcuts with local SVG icons. */
+@media(min-width:992px){:root{--sidebar-width:280px}}
+.sidebar{padding:18px 12px;background:#f8faff}
+.sidebar-caption{padding:3px 10px 18px}
+.nav-frame{padding:8px;margin:0 0 12px;border:1px solid var(--line);border-top:3px solid var(--tone);border-radius:14px;background:#fff;box-shadow:0 3px 12px #21324d04}
+.nav-frame-title{display:flex;align-items:center;gap:8px;margin:0 0 5px;padding:8px 9px;color:var(--tone);font-size:12px;font-weight:700;line-height:1.5}
+.nav-frame-title>.icon{width:18px;height:18px;flex-shrink:0}
+.nav-frame .nav-item{padding:8px;gap:9px;font-size:12px;min-height:46px;margin:2px 0}
+.nav-frame .nav-icon{flex-shrink:0;width:32px;height:32px;border:1px solid #ffffffb3;border-radius:10px}
+.nav-frame .nav-icon .icon{width:19px;height:19px}
+.nav-frame .nav-item.active{box-shadow:inset 3px 0 var(--tone)}
+.nav-frame .nav-item.active:after{display:none}
+.nav-frame .nav-item:focus-visible,.workspace-menu-card:focus-visible{outline:3px solid #4263eb;outline-offset:3px}
+.nav-details .nav-frame-title{justify-content:flex-start;margin-bottom:0}
+.nav-chevron{margin-left:auto}
+.nav-details[open] .nav-frame-title{margin-bottom:5px}
+.sidebar-public{margin-top:16px;background:#fff}
+.workspace-menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.workspace-menu-card{display:flex;position:relative;align-items:flex-start;gap:14px;padding:20px 16px;min-height:128px;border:1px solid var(--line);border-radius:16px;border-top:3px solid var(--tone);background:linear-gradient(135deg,var(--tone-soft),#fff 72%);color:var(--ink);text-decoration:none;transition:box-shadow .18s,transform .18s}
+.workspace-menu-card:hover{color:var(--tone);transform:translateY(-2px);box-shadow:0 8px 22px #21324d12}
+.workspace-menu-icon{display:grid;place-items:center;width:46px;height:46px;flex-shrink:0;border-radius:14px;background:#fff;color:var(--tone);border:1px solid var(--tone-soft);box-shadow:0 3px 9px #21324d08}
+.workspace-menu-icon .icon{width:27px;height:27px;stroke-width:1.6}
+.workspace-menu-copy{display:block;min-width:0;padding-right:10px}
+.workspace-menu-copy strong{display:block;font-size:15px;line-height:1.6}
+.workspace-menu-copy small{display:block;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.8}
+.workspace-menu-arrow{position:absolute;right:10px;bottom:10px;color:var(--tone)}
+.workspace-menu-arrow .icon{width:16px;height:16px}
+@media(max-width:1199px){.workspace-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:991px){.sidebar{width:min(300px,calc(100vw - 36px))}}
+@media(max-width:575px){.workspace-menu-grid{grid-template-columns:1fr;gap:12px}.workspace-menu-card{min-height:108px;padding:16px}}
+@media(prefers-reduced-motion:reduce){.workspace-menu-card{transition:none}.workspace-menu-card:hover{transform:none}}

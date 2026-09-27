@@ -1,0 +1,19 @@
+﻿@model IReadOnlyList<FileInfoView>
+@{var group = "files-" + Guid.NewGuid().ToString("N");}
+@if(Model.Count == 0){<div class="empty-state"><span class="empty-icon"><partial name="_Icon" model='"folder"'/></span><p>ยังไม่มีไฟล์ในหมวดนี้</p><small>เอกสารและไฟล์ที่เพิ่มจะแสดงที่นี่</small></div>}
+<div class="file-grid">
+@foreach(var file in Model){
+    var image = file.ContentType.StartsWith("image/"); var pdf = file.ContentType == "application/pdf";
+    var kind = image ? "image" : pdf ? "pdf" : file.Name.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ? "excel" : "word";
+    var label = image ? "รูปภาพ" : pdf ? "PDF" : kind == "excel" ? "EXCEL" : "WORD";
+    <article class="file-card file-@kind">
+        <span class="file-icon"><partial name="_Icon" model='@(image ? "image" : "file")'/></span>
+        <div class="file-info"><span class="file-kind">@label</span>
+        @if(image || pdf){<a class="file-name" href="/files/@file.Id" data-media-preview data-media-type="@(image ? "image" : "pdf")" data-media-title="@file.Name" data-media-group="@group">@file.Name</a>}
+        else{<a class="file-name" href="/files/@file.Id?download=true">@file.Name</a>}
+        <small>@(image || pdf ? "คลิกเพื่อเปิดตัวอย่าง" : "ดาวน์โหลดเพื่อเปิดไฟล์")</small></div>
+        <div class="file-actions"><a class="icon-button" href="/files/@file.Id?download=true" aria-label="ดาวน์โหลด @file.Name" title="ดาวน์โหลด"><partial name="_Icon" model='"download"'/></a>
+        @if(ViewBag.CanEdit == true){<form asp-controller="Files" asp-action="Delete" method="post" data-confirm><input type="hidden" name="id" value="@file.Id"/><button class="icon-button text-danger" aria-label="ลบ @file.Name" title="ลบไฟล์">×</button></form>}</div>
+    </article>
+}
+</div>

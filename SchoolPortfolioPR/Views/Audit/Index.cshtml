@@ -1,0 +1,3 @@
+@model PageView<AuditLog>
+@{ViewData["Title"] = "ประวัติการใช้งาน"; ViewBag.Page = Model.Page; ViewBag.Pages = Model.Pages;}
+<h1>ประวัติการใช้งาน</h1><div class="panel table-responsive"><table class="table"><thead><tr><th>เวลา (UTC)</th><th>ผู้ใช้ / IP</th><th>การทำงาน</th><th>ข้อมูล</th></tr></thead><tbody>@foreach(var a in Model.Items){<tr><td>@a.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td><td>@a.User<small class="d-block">@a.IPAddress</small></td><td>@a.Action<br/>@a.Entity #@a.EntityId</td><td><details><summary>ดูการเปลี่ยนแปลง</summary><strong>ก่อน</strong><pre class="text-wrap">@a.OldValue</pre><strong>หลัง</strong><pre class="text-wrap">@a.NewValue</pre></details></td></tr>}</tbody></table><partial name="_Pagination"/></div>

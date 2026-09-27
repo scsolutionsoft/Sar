@@ -1,0 +1,19 @@
+@model ActivityGalleryView
+<section class="panel" id="activityGallery">
+<div class="section-head"><div class="section-title"><span class="section-icon"><partial name="_Icon" model='"image"'/></span><div><h2>คลังภาพกิจกรรม</h2><small>รูปในระบบเปิดพรีวิว · ลิงก์คลาวด์เปิดเว็บไซต์ต้นทาง</small></div></div><span class="count-chip">@Model.Items.Count รายการ</span></div>
+@if(Model.CanEdit){<div class="d-flex flex-wrap gap-2 mb-4"><a class="btn btn-primary" href="/Gallery/Entry?activityId=@Model.ActivityId&amp;source=Upload">+ อัปโหลดภาพ</a><a class="btn btn-outline-primary" href="/Gallery/Entry?activityId=@Model.ActivityId&amp;source=External">+ เพิ่มลิงก์คลาวด์</a></div>}
+<div class="activity-gallery-grid">
+@foreach(var item in Model.Items){
+    var title = string.IsNullOrWhiteSpace(item.Caption) ? item.Title : item.Caption;
+    <article class="gallery-entry" data-gallery-item>
+    @if(item.FileId.HasValue){<a class="gallery-entry-media" href="/files/@item.FileId" data-media-preview data-media-type="image" data-media-title="@title" data-media-group="activity-@Model.ActivityId"><img src="/files/@item.FileId" alt="@title" loading="lazy"/><span class="gallery-mode">ดูภาพขยาย</span></a>}
+    else{<a class="gallery-entry-media gallery-cloud" href="@item.ExternalUrl" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์คลาวด์: @title (แท็บใหม่)"><partial name="_Icon" model='"image"'/><strong>อัลบั้ม / ภาพบนคลาวด์</strong><small>@(new Uri(item.ExternalUrl!).Host)</small><span class="gallery-mode">เปิดลิงก์ภายนอก ↗</span></a>}
+    <div class="gallery-entry-copy"><p>@title</p>@if(item.FileId.HasValue && !string.IsNullOrWhiteSpace(item.Caption)){<small class="muted">@item.Title</small>}
+    @if(Model.CanEdit){<div class="d-flex flex-wrap gap-2 mt-3"><a class="btn btn-sm btn-light" href="/Gallery/Entry?activityId=@Model.ActivityId&amp;fileId=@item.FileId&amp;linkId=@item.LinkId">แก้ไข@(item.FileId.HasValue?"คำบรรยาย":"ลิงก์ / คำบรรยาย")</a>
+    @if(!item.FileId.HasValue){<form asp-controller="Gallery" asp-action="DeleteLink" method="post" data-confirm><input type="hidden" name="activityId" value="@Model.ActivityId"/><input type="hidden" name="linkId" value="@item.LinkId"/><input type="hidden" name="rowVersion" value="@Model.RowVersion"/><button class="btn btn-sm btn-outline-danger">นำลิงก์ออก</button></form>}
+    </div>}
+    </div></article>
+}
+</div>
+@if(Model.Items.Count==0){<div class="empty-state"><span class="empty-icon"><partial name="_Icon" model='"image"'/></span><p>ยังไม่มีภาพกิจกรรม</p><small>อัปโหลดรูปภาพหรือเพิ่มลิงก์อัลบั้มจากคลาวด์</small></div>}
+</section>

@@ -1,0 +1,43 @@
+# ผลตรวจรับบนเครื่องพัฒนา — 26 กันยายน 2569
+
+- .NET 8 build ผ่าน ไม่มี compiler warnings/errors
+- Unit tests 22 กรณีผ่าน: ลำดับงาน/บทบาท, private access, MIME/ไฟล์ปลอม, HTML escaping, พ.ศ., Office exports, EF constraints และ soft delete เมื่อโหลดผู้ร่วมกิจกรรมแล้ว
+- เชื่อมต่อ SQL Server ฐานข้อมูล Sar สำเร็จ ใช้ migration ใน schema `portfolio`; ไม่มี model changes ที่ยังขาด migration
+- SQL integration ผ่าน: บันทึกความสัมพันธ์, rowversion, Audit, portfolio, binary file round-trip, PDF ภาษาไทย, วารสาร และ soft delete; transaction ทดสอบ rollback แล้ว
+- Browser smoke ผ่าน: หน้าแรก, login, Dashboard, รายการ/ฟอร์มกิจกรรมและรางวัล, แฟ้มผลงาน, รายงาน, วารสาร, ข้อมูลหลัก, ผู้ใช้ และ Audit
+- เบราว์เซอร์ทดสอบสร้างกิจกรรม อัปโหลดภาพ จัดภาพปก/ลำดับ และ Draft → Submitted → Reviewed → Approved → Published ผ่าน
+- ไฟล์และกิจกรรมที่ไม่เปิดสาธารณะตอบ 404 สำหรับ anonymous แม้สถานะ Published; anonymous Dashboard ไป login; POST ไม่มี CSRF token ตอบ 400
+- ดาวน์โหลด PDF/DOCX/XLSX ผ่าน
+- วารสาร 11 หน้าพื้นฐานสร้างได้ ตัวอ่าน PDF.js, สารบัญภาษาไทยจาก PDF outline, ถัดไป/ก่อนหน้า และซูมผ่าน
+- เดสก์ท็อป 1440px และมือถือ 390px ไม่มี page overflow ในหน้าแรก/Dashboard
+- ข้อมูลชั่วคราวของ browser test และไฟล์ถูกลบตาม ID ของรอบทดสอบแล้ว
+- ตรวจ NuGet advisory feed ไม่พบแพ็กเกจที่แหล่งข้อมูลปัจจุบันรายงานว่ามีช่องโหว่
+- ตรวจซอร์สและชุด publish ไม่พบรหัสผ่านฐานข้อมูลหรือรหัสผ่านบัญชีเริ่มต้น
+- Publish `Release / win-x64 / framework-dependent` สำเร็จที่ `artifacts/publish`
+
+หลักฐานภาพหน้าจอและไฟล์ดาวน์โหลดอยู่ใน `artifacts/` ซึ่งไม่รวม Git. ยังไม่ได้ deploy ไปยัง IIS จริงหรือทดสอบโหลดหลายผู้ใช้พร้อมกัน; ขั้นตอนติดตั้งและการตั้งค่าเซิร์ฟเวอร์อยู่ใน `docs/IIS.md`.
+
+## ตรวจธีมและป๊อปอัปดูไฟล์ร่วมกัน
+
+- Build ทั้ง solution ผ่าน ไม่มี warnings/errors; unit tests 22 กรณีผ่าน
+- UiChecks ผ่าน: ป๊อปอัป PDF กิจกรรม, การซูมขนาดจริง, ดาวน์โหลด, Escape และคืนโฟกัส, ภาพ/PDF ในชุดเดียวกัน, thumbnail, PDF 3 หน้า, เต็มจอ, ปิด/เปิดใหม่, มือถือ 390px และเมนูมือถือ
+- เกียรติบัตรหน้า Awards/Portfolios และรายงานที่สร้างตามตัวกรองเปิดในป๊อปอัปเดียวกันผ่าน
+- กรณี PDF หายตอบ 404 แสดงข้อความในหน้าต่างได้ ชื่อไฟล์ที่มี HTML แสดงเป็นข้อความ; ไม่พบ JavaScript page errors
+- Browser smoke หลังปรับธีมผ่าน 15 เส้นทาง, ดาวน์โหลด PDF/DOCX/XLSX, CSRF, การกรอกฟอร์มกิจกรรมใหม่, อัปโหลดและเปิดแกลเลอรี, ภาพปก/ลำดับ, workflow และ popup PDF จากหน้า Flipbook/รายการวารสาร
+- ข้อมูลชั่วคราวของ smoke ถูกลบเฉพาะ ID ของรอบทดสอบแล้ว; ข้อมูลตัวอย่าง 10 กิจกรรมคงอยู่
+- ชุด `artifacts/publish` อัปเดตพร้อมฟอนต์ Sarabun และ `media-viewer.js`; หลักฐานธีมและหน้าต่างดูไฟล์อยู่ใน `artifacts/ui/`
+
+## กระดานประชาสัมพันธ์และวารสารตัวอย่าง — 26 กันยายน 2026
+
+- Migration `AddScheduledAnnouncements` ใช้กับ Sar สำเร็จ เพิ่มตารางข่าวพร้อมช่วงเวลา ขนาดกรอบ ภาพ และ RowVersion
+- Build solution ผ่าน ไม่มี warnings/errors; unit tests ผ่าน 30 กรณี รวมขอบเขตวันเริ่ม/สิ้นสุดและเที่ยงคืนเวลาไทย
+- สร้างข่าวตัวอย่าง 8 รายการ: แสดง 6, ล่วงหน้า 1, หมดอายุ 1 พร้อมกรอบเล็ก/กลาง/ใหญ่
+- สร้างเรื่องราวสาธารณะแยก 3 รายการและวารสารตัวอย่างเดือนกันยายน 2569 จำนวน 12 หน้า กิจกรรมส่วนตัวเดิม 10 รายการไม่เปลี่ยนสิทธิ์
+- `UiChecks --pr` ผ่าน: หน้าแรกและภาพโหลดครบ, กรอบคละขนาด, มือถือ 390px ไม่มีการล้นแนวนอน, ข่าวและภาพล่วงหน้า/หมดอายุถูกปิดไม่ให้เข้าถึง
+- ฟอร์มสร้าง/แก้ไขผ่าน: เลือกภาพจากคลังแล้วคัดลอกเป็นไฟล์ของข่าว, ขนาดและลำดับ, ป้องกันแก้ไขทับจากสองแท็บด้วย HTTP 409, วันในอนาคต/อดีต, ปิดแสดง, ลบภาพ, อัปโหลดภาพ และ soft delete
+- วารสารผ่าน: อ่าน 12 หน้า, เลื่อนหน้า, PDF popup, ตรวจลายเซ็น ขนาด และ SHA-256 ของ PDF ที่อ่านจาก SQL; ภาพและเอกสารทั้งหมดเก็บใน `varbinary(max)`
+- ไม่พบ JavaScript page errors; fixture ข่าวและไฟล์ที่ใช้ทดสอบถูกลบเฉพาะ ID ที่สร้างแล้ว
+- ตรวจ UiChecks ชุดเดิมซ้ำหลังปรับ culture ผ่านทั้งหมด: กิจกรรม เกียรติบัตร แฟ้มผลงาน รายงาน PDF การซูม ดาวน์โหลด คีย์บอร์ด มือถือ และ fallback ไฟล์หาย
+- กำหนด request culture ให้รับวันที่ HTML แบบ Gregorian ISO แม้เครื่อง Windows ใช้ภาษาไทย และแสดง พ.ศ. ผ่าน `Thai.Date` ตามเดิม
+- Publish Release / win-x64 สำเร็จพร้อม assets กระดานข่าวชุดใหม่; ไม่ได้ deploy ไป IIS จริง
+- คู่มือ: `docs/PUBLIC-RELATIONS.md`; ภาพหน้าจอ: `artifacts/ui/pr-home-desktop.png`, `pr-home-mobile.png`, `pr-sample-publication.png`, `pr-board-management.png`, `pr-editor.png`

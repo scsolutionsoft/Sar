@@ -1,0 +1,13 @@
+@model GalleryEntryForm
+@{var editing=Model.FileId.HasValue||Model.LinkId!=0;ViewData["Title"]=editing?"แก้ไขรายการภาพ":"เพิ่มรายการในคลังภาพ";}
+<div class="page-head"><div><p class="eyebrow">Activity gallery</p><h1>@ViewData["Title"]</h1><p class="muted">@ViewBag.ActivityTitle</p></div><a href="/activity/@Model.ActivityId#activityGallery" class="btn btn-light">กลับคลังภาพกิจกรรม</a></div>
+<section class="panel gallery-form">
+@if(!editing){<div class="gallery-source-options mb-4"><a class="@(Model.Source==GallerySource.Upload?"active":"")" href="/Gallery/Entry?activityId=@Model.ActivityId&amp;source=Upload"><partial name="_Icon" model='"image"'/><strong>อัปโหลดภาพ</strong><small>เก็บในระบบ · เปิดป๊อปอัปพรีวิว</small></a><a class="@(Model.Source==GallerySource.External?"active":"")" href="/Gallery/Entry?activityId=@Model.ActivityId&amp;source=External"><partial name="_Icon" model='"folder"'/><strong>ลิงก์จากคลาวด์</strong><small>เก็บ URL · เปิดเว็บไซต์ต้นทาง</small></a></div>}
+<form method="post" enctype="multipart/form-data">
+<div asp-validation-summary="All" class="text-danger"></div><input asp-for="ActivityId" type="hidden"/><input asp-for="FileId" type="hidden"/><input asp-for="LinkId" type="hidden"/><input asp-for="Source" type="hidden"/><input asp-for="RowVersion" type="hidden"/>
+@if(Model.Source==GallerySource.External){<label asp-for="ExternalUrl" class="form-label"></label><input asp-for="ExternalUrl" type="url" class="form-control" maxlength="2048" placeholder="https://drive.google.com/..." required/><p class="form-text">วางลิงก์แชร์ภาพหรืออัลบั้มจาก Google Drive, OneDrive หรือบริการอื่น ผู้ชมจะเปิดลิงก์ในแท็บใหม่ โดยใช้สิทธิ์แชร์ที่กำหนดในบริการนั้น</p>}
+else if(Model.FileId.HasValue){<a href="/files/@Model.FileId" data-media-preview data-media-type="image" data-media-title="@Model.Caption"><img src="/files/@Model.FileId" class="gallery-edit-image mb-4" alt="ภาพที่กำลังแก้คำบรรยาย"/></a>}
+else{<label asp-for="Files" class="form-label">เลือกรูปภาพ</label><input asp-for="Files" type="file" class="form-control" accept=".png,.jpg,.jpeg,.webp" multiple required/><p class="form-text">PNG, JPG หรือ WebP สูงสุด 20 รูปต่อครั้ง รูปละไม่เกิน 10 MB และรวมไม่เกิน 50 MB</p>}
+<label asp-for="Caption" class="form-label mt-3"></label><textarea asp-for="Caption" class="form-control" rows="4" maxlength="500" placeholder="เช่น นักเรียนร่วมทำกิจกรรมทดลองวิทยาศาสตร์"></textarea><p class="form-text">ไม่เกิน 500 ตัวอักษร เว้นว่างได้ หากอัปโหลดหลายรูป คำบรรยายนี้จะใช้กับทุกภาพและแก้รายภาพภายหลังได้</p>
+<div class="form-actions mt-4"><button class="btn btn-primary">บันทึกรายการภาพ</button><a href="/activity/@Model.ActivityId#activityGallery" class="btn btn-light">ยกเลิก</a></div>
+</form></section>

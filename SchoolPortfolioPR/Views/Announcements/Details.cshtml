@@ -1,0 +1,6 @@
+@model Announcement
+@using SchoolPortfolioPR.Services
+@{ ViewData["Title"] = Model.Title; var today = (DateTime)ViewBag.Today; }
+<div class="page-head"><div><p class="eyebrow">@Model.Category</p><h1>@Model.Title</h1><p class="muted">ประชาสัมพันธ์ @Thai.Date(Model.StartDate) – @Thai.Date(Model.EndDate)</p></div><a class="btn btn-light" href="/">กลับหน้าแรก</a></div>
+@if(!AnnouncementSchedule.VisibleOn(today).Compile()(Model)){<div class="alert alert-info">ตัวอย่างสำหรับผู้ดูแล · @AnnouncementSchedule.Status(Model, today) · ข่าวนี้ยังไม่แสดงต่อผู้เข้าชม</div>}
+<article class="panel">@if(Model.ImageId.HasValue){<a href="/files/@Model.ImageId" data-media-preview data-media-type="image" data-media-title="@Model.Title"><img class="article-cover" src="/files/@Model.ImageId" alt="@Model.Title"/></a>}<p class="lead mt-4">@Model.Summary</p><div class="article-body">@Model.Body</div></article>

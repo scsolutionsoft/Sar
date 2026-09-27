@@ -1,0 +1,19 @@
+@inject BrandingService Branding
+<div class="modal fade media-modal" id="mediaViewer" tabindex="-1" aria-labelledby="mediaTitle" aria-describedby="mediaStatus" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <header class="media-header">
+                <div class="media-heading"><span class="media-type" id="mediaType">ไฟล์</span><div><h2 id="mediaTitle">ดูตัวอย่างไฟล์</h2><p id="mediaPosition" class="mb-0">@((await Branding.GetAsync()).ProgramName)</p></div></div>
+                <div class="media-actions"><a id="mediaDownload" class="btn btn-primary btn-sm" download><partial name="_Icon" model='"download"'/><span>ดาวน์โหลด</span></a><button type="button" class="icon-button" id="mediaFullscreen" aria-label="เปิดเต็มจอ"><partial name="_Icon" model='"expand"'/></button><button type="button" class="icon-button" data-bs-dismiss="modal" aria-label="ปิดตัวอย่าง"><partial name="_Icon" model='"close"'/></button></div>
+            </header>
+            <div class="media-toolbar" role="toolbar" aria-label="เครื่องมือดูตัวอย่าง">
+                <div class="toolbar-group"><button type="button" id="mediaPrevious" class="icon-button" aria-label="ไฟล์ก่อนหน้า">←</button><button type="button" id="mediaNext" class="icon-button" aria-label="ไฟล์ถัดไป">→</button><span class="toolbar-label">ไฟล์</span></div>
+                <div class="toolbar-group" id="mediaPdfControls" hidden><button type="button" id="mediaPagePrevious" class="icon-button" aria-label="PDF หน้าก่อนหน้า">‹</button><label for="mediaPage">หน้า</label><input id="mediaPage" type="number" min="1" value="1" aria-label="หน้า PDF"/><span>/ <span id="mediaPageCount">1</span></span><button type="button" id="mediaPageNext" class="icon-button" aria-label="PDF หน้าถัดไป">›</button></div>
+                <div class="toolbar-group"><button type="button" id="mediaZoomOut" class="icon-button" aria-label="ย่อภาพ">−</button><output id="mediaZoom">100%</output><button type="button" id="mediaZoomIn" class="icon-button" aria-label="ขยายภาพ">+</button><button type="button" id="mediaFit" class="btn btn-sm btn-light">พอดีจอ</button></div>
+            </div>
+            <div class="media-stage" id="mediaStage" aria-busy="false"><div class="media-surface" id="mediaSurface"></div><div class="media-loading" id="mediaLoading" hidden><span class="spinner-border" aria-hidden="true"></span><span>กำลังโหลดไฟล์…</span></div></div>
+            <div class="media-thumbnails" id="mediaThumbnails" aria-label="เลือกไฟล์ในชุด" hidden></div>
+            <footer class="media-footer"><span id="mediaStatus" role="status" aria-live="polite"></span><span class="d-none d-md-inline">ใช้ปุ่มลูกศรเพื่อเลื่อน · Esc เพื่อปิด</span></footer>
+        </div>
+    </div>
+</div>

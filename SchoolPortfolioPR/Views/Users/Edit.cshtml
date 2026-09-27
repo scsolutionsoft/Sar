@@ -1,0 +1,8 @@
+@model UserForm
+@{ViewData["Title"] = "จัดการผู้ใช้";}
+<h1>จัดการผู้ใช้</h1><form method="post" class="panel"><input asp-for="Id" type="hidden"/><div asp-validation-summary="All"></div><div class="row"><div class="col-md-6"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control"/><span asp-validation-for="Email"></span></div>
+<div class="col-md-6"><label asp-for="StudentId" class="form-label"></label><select asp-for="StudentId" asp-items="ViewBag.Students" class="form-select"><option value="">เลือกเมื่อเป็นบทบาท Student</option></select><span asp-validation-for="StudentId"></span></div>
+<div class="col-md-6"><label asp-for="DisplayName" class="form-label"></label><input asp-for="DisplayName" class="form-control"/><span asp-validation-for="DisplayName"></span></div>
+<div class="col-md-6"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control"/><span asp-validation-for="Password"></span></div>
+<div class="col-md-6"><label asp-for="DepartmentId" class="form-label"></label><select asp-for="DepartmentId" asp-items="ViewBag.Departments" class="form-select"><option value="">เลือก</option></select><span asp-validation-for="DepartmentId"></span></div>
+<div class="col-md-6"><label asp-for="Role" class="form-label"></label><select asp-for="Role" asp-items="new Microsoft.AspNetCore.Mvc.Rendering.SelectList(Roles.All)" class="form-select"><option value="">เลือก</option></select><span asp-validation-for="Role"></span></div></div><div class="mt-4 d-flex gap-2"><button class="btn btn-primary">บันทึก</button><a asp-action="Index" class="btn btn-light">กลับรายการ</a></div></form>

@@ -1,0 +1,2 @@
+@{ int page = ViewBag.Page; int pages = ViewBag.Pages; }
+<nav aria-label="หน้ารายการ"><ul class="pagination">@for(int i = Math.Max(1, page - 2); i <= Math.Min(pages, page + 2); i++){var query = new Dictionary<string,string?>(Context.Request.Query.ToDictionary(x => x.Key, x => (string?)x.Value.ToString()));query["page"] = i.ToString();var href = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(Context.Request.Path, query);<li class="page-item @(i == page ? "active" : "")"><a class="page-link" href="@href">@i</a></li>}</ul></nav>

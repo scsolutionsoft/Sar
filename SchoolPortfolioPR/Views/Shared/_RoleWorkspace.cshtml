@@ -1,0 +1,11 @@
+@model WorkspaceView
+<section class="panel" aria-labelledby="roleWorkspace" data-role-workspace>
+<p class="eyebrow">Your workspace</p><h2 id="roleWorkspace">พื้นที่ทำงาน · @Model.Role</h2><p class="muted">@Model.Description</p>
+<div class="workspace-menu-grid">@foreach(var item in Model.Links){
+    var (icon,tone) = item.Url.Split('?')[0] switch {
+        "/Workflows" => ("workflow","amber"), "/Activities/Edit" => ("activity","blue"), "/Awards/Edit" => ("award","amber"),
+        "/Announcements" => ("megaphone","violet"), "/Publications" => ("book","violet"), "/Masters" => ("settings","slate"),
+        "/Audit" => ("shield","slate"), "/Branding" => ("settings","slate"), "/Users" => ("people","blue"), "/Admissions" => ("graduate","violet"),
+        "/Gallery" => ("image","blue"), "/Documents" => ("folder","teal"), "/Portfolios" => ("briefcase","teal"), _ => ("chart","teal") };
+    <a href="@item.Url" class="workspace-menu-card tone-@tone"><span class="workspace-menu-icon"><partial name="_Icon" model="icon"/></span><span class="workspace-menu-copy"><strong>@item.Title</strong><small>@item.Description</small></span><span class="workspace-menu-arrow"><partial name="_Icon" model='"arrow"'/></span></a>
+}</div></section>

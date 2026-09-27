@@ -1,0 +1,12 @@
+@model IReadOnlyList<Announcement>
+<div class="pr-board">
+@foreach (var item in Model)
+{
+    <article class="pr-tile pr-size-@item.Size.ToString().ToLowerInvariant() pr-tone-@item.Tone.ToString().ToLowerInvariant()" data-announcement-id="@item.Id">
+        @if(item.ImageId.HasValue){<img class="pr-tile-image" src="/files/@item.ImageId" alt="@item.Title" loading="lazy"/>}
+        <div class="pr-tile-shade"></div>
+        <div class="pr-tile-top"><span class="pr-category">@item.Category</span>@if(item.ImageId.HasValue){<a class="pr-image-button" href="/files/@item.ImageId" data-media-preview data-media-type="image" data-media-title="@item.Title" data-media-group="announcement-board" aria-label="ขยายภาพ @item.Title"><partial name="_Icon" model='"expand"'/></a>}</div>
+        <div class="pr-tile-content"><small>แสดงถึง @Thai.Date(item.EndDate)</small><h3><a href="/announcements/@item.Id">@item.Title</a></h3><p>@item.Summary</p><a class="pr-read" href="/announcements/@item.Id">อ่านประกาศ <span aria-hidden="true">↗</span></a></div>
+    </article>
+}
+</div>

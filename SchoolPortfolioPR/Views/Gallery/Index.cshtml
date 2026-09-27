@@ -1,0 +1,7 @@
+@model PageView<GalleryAlbumView>
+@{ViewData["Title"]="คลังภาพกิจกรรม";ViewBag.Page=Model.Page;ViewBag.Pages=Model.Pages;}
+<div class="page-head"><div><p class="eyebrow">Activity albums</p><h1>คลังภาพกิจกรรม</h1><p class="muted">เลือกกิจกรรมเพื่อดูรูปพร้อมคำบรรยาย หรือเปิดอัลบั้มจากคลาวด์</p></div></div>
+<section class="panel"><form method="get" class="d-flex gap-2"><input class="form-control" name="q" value="@ViewBag.Search" placeholder="ค้นหาชื่อกิจกรรม รหัส หรือคำบรรยายภาพ" aria-label="ค้นหาคลังภาพ"/><button class="btn btn-primary">ค้นหา</button></form></section>
+<div class="activity-gallery-grid gallery-albums">@foreach(var album in Model.Items){<a class="gallery-entry" href="/activity/@album.Id#activityGallery"><div class="gallery-entry-media">@if(album.CoverId.HasValue){<img src="/files/@album.CoverId" alt="@album.Title" loading="lazy"/>}else{<div class="gallery-cloud"><partial name="_Icon" model='"image"'/><span>คลังภาพกิจกรรม</span></div>}</div><div class="gallery-entry-copy"><small class="muted">@Thai.Date(album.Date) · @album.Department</small><h2>@album.Title</h2><span class="badge bg-light text-dark">@album.Images รูปในระบบ</span> <span class="badge bg-light text-dark">@album.Links ลิงก์คลาวด์</span></div></a>}</div>
+@if(Model.Total==0){<div class="panel empty-state">ไม่พบกิจกรรมที่ค้นหา</div>}
+<partial name="_Pagination"/>

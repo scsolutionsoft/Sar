@@ -1,0 +1,75 @@
+@{
+    var branding = await Branding.GetAsync();
+    var signedIn = User.Identity?.IsAuthenticated == true;
+    var currentSection = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLowerInvariant() ?? "home";
+    var admin = User.IsInRole("SuperAdmin") || User.IsInRole("Administrator");
+    var roleName = Roles.All.FirstOrDefault(User.IsInRole) ?? "Viewer";
+    var student = User.IsInRole("Student") && !Roles.Editors.Any(User.IsInRole);
+    var masterIcons = new Dictionary<string,string> { ["Department"] = "folder", ["SubjectGroup"] = "book", ["Teacher"] = "people", ["Student"] = "people", ["AcademicYear"] = "activity", ["ActivityCategory"] = "folder", ["Tag"] = "folder", ["SchoolProfile"] = "school" };
+}
+@inject BrandingService Branding
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>@ViewData["Title"] · @branding.ProgramName</title>
+    <meta name="description" content="ข่าว กิจกรรม รางวัล และผลงานของโรงเรียน"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/materia.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/announcements.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/portfolios.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/navigation.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/participant-picker.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/branding.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/help.css" asp-append-version="true"/>
+    @if(branding.LogoFileId.HasValue){<link rel="icon" href="/Branding/Logo/@branding.LogoFileId"/>}
+    <link rel="preload" href="~/fonts/Sarabun-Regular.ttf" as="font" type="font/ttf" crossorigin/>
+</head>
+<body data-section="@currentSection">
+<a class="skip-link" href="#mainContent">ข้ามไปเนื้อหา</a>
+<header class="topbar">
+    <div class="d-flex align-items-center gap-3">
+        @if(signedIn){<button class="icon-button d-lg-none" type="button" data-menu aria-controls="sidebar" aria-expanded="false" aria-label="เปิดเมนู"><partial name="_Icon" model='"menu"'/></button>}
+        <a class="brand" href="/"><span class="brand-mark"><partial name="_BrandLogo" model="branding"/></span><span class="brand-name"><span class="program-name" title="@branding.ProgramName">@branding.ProgramName</span><small>เรื่องราวแห่งการเรียนรู้และความสำเร็จ</small></span></a>
+    </div>
+    <div class="top-actions"><a class="top-publication" href="/Publications"><partial name="_Icon" model='"book"'/> วารสารโรงเรียน</a>
+    @if(signedIn){<span class="account-avatar" aria-hidden="true">@(User.Identity!.Name?.Substring(0,1).ToUpperInvariant())</span><span class="account-name">@User.Identity!.Name<small>@Roles.Labels[roleName]</small></span><form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-sm btn-light">ออกจากระบบ</button></form>}
+    else{<a class="btn btn-primary" href="/Account/Login">เข้าสู่ระบบ <partial name="_Icon" model='"arrow"'/></a>}</div>
+</header>
+@if(signedIn){
+<button class="sidebar-scrim" data-menu-close hidden aria-label="ปิดเมนู"></button>
+<aside class="sidebar" id="sidebar"><div class="sidebar-caption"><span class="live-dot"></span> พื้นที่ทำงานโรงเรียน</div>
+<nav aria-label="เมนูหลัก"><section class="nav-frame tone-blue" aria-labelledby="navWork"><h2 class="nav-frame-title" id="navWork"><partial name="_Icon" model='"dashboard"'/>พื้นที่ทำงาน</h2>
+<a href="/Dashboard" data-nav class="nav-item tone-blue"><span class="nav-icon"><partial name="_Icon" model='"dashboard"'/></span>ภาพรวม</a>
+<a href="/Help" data-nav class="nav-item tone-blue"><span class="nav-icon"><partial name="_Icon" model='"book"'/></span>ตัวช่วยใช้งาน (Wizard)</a>
+@if(Roles.Editors.Any(User.IsInRole)){<a href="/Workflows" data-nav class="nav-item tone-amber"><span class="nav-icon"><partial name="_Icon" model='"workflow"'/></span>งานที่รอดำเนินการ</a>}
+</section><section class="nav-frame tone-amber" aria-labelledby="navSchool"><h2 class="nav-frame-title" id="navSchool"><partial name="_Icon" model='"award"'/>ผลงานโรงเรียน</h2>
+<a href="/Activities" data-nav class="nav-item tone-blue"><span class="nav-icon"><partial name="_Icon" model='"activity"'/></span>กิจกรรมและข่าว</a>
+<a href="/Gallery" data-nav class="nav-item tone-blue"><span class="nav-icon"><partial name="_Icon" model='"image"'/></span>คลังภาพกิจกรรม</a>
+<a href="/Awards" data-nav class="nav-item tone-amber"><span class="nav-icon"><partial name="_Icon" model='"award"'/></span>รางวัลและเกียรติบัตร</a>
+@if(!student){<a href="/Portfolios" data-nav class="nav-item tone-teal"><span class="nav-icon"><partial name="_Icon" model='"briefcase"'/></span>แฟ้มผลงานโรงเรียน</a>}
+</section><section class="nav-frame tone-teal" aria-labelledby="navPersonal"><h2 class="nav-frame-title" id="navPersonal"><partial name="_Icon" model='"folder"'/>พื้นที่ส่วนตัว</h2>
+<a href="/Documents" data-nav class="nav-item tone-teal"><span class="nav-icon"><partial name="_Icon" model='"folder"'/></span>คลัง PDF ส่วนตัว</a>
+@if(student){<a href="/Admissions" data-nav class="nav-item tone-violet"><span class="nav-icon"><partial name="_Icon" model='"graduate"'/></span>แฟ้มยื่นเรียนต่อ</a>}
+</section><section class="nav-frame tone-violet" aria-labelledby="navMedia"><h2 class="nav-frame-title" id="navMedia"><partial name="_Icon" model='"megaphone"'/>สื่อและรายงาน</h2>
+@if(User.IsInRole("SuperAdmin") || User.IsInRole("Administrator") || User.IsInRole("PRAdmin")){<a href="/Announcements" data-nav class="nav-item tone-violet"><span class="nav-icon"><partial name="_Icon" model='"megaphone"'/></span>กระดานประชาสัมพันธ์</a>}
+<a href="/Publications" data-nav class="nav-item tone-violet"><span class="nav-icon"><partial name="_Icon" model='"book"'/></span>วารสารรายเดือน</a>
+<a href="/Reports" data-nav class="nav-item tone-teal"><span class="nav-icon"><partial name="_Icon" model='"chart"'/></span>รายงานและสถิติ</a>
+</section>
+@if(admin){<details class="nav-details nav-frame tone-slate" open="@(currentSection == "masters")"><summary class="nav-frame-title"><partial name="_Icon" model='"folder"'/>ข้อมูลพื้นฐาน <span class="nav-chevron">⌄</span></summary>@foreach(var item in SchoolPortfolioPR.Controllers.MastersController.Names){<a asp-controller="Masters" asp-action="Index" asp-route-kind="@item.Key" data-nav class="nav-item tone-slate"><span class="nav-icon"><partial name="_Icon" model="masterIcons[item.Key]"/></span>@item.Value</a>}</details><section class="nav-frame tone-slate" aria-labelledby="navAdmin"><h2 class="nav-frame-title" id="navAdmin"><partial name="_Icon" model='"settings"'/>ดูแลระบบ</h2><a href="/Audit" data-nav class="nav-item tone-slate"><span class="nav-icon"><partial name="_Icon" model='"shield"'/></span>ประวัติการใช้งาน</a>
+@if(User.IsInRole("SuperAdmin")){<a href="/Users" data-nav class="nav-item tone-slate"><span class="nav-icon"><partial name="_Icon" model='"people"'/></span>ผู้ใช้และสิทธิ์</a>}
+<a href="/Branding" data-nav class="nav-item tone-slate"><span class="nav-icon"><partial name="_Icon" model='"settings"'/></span>ตั้งค่าโปรแกรม</a>
+</section>}
+</nav><a href="/" class="sidebar-public"><partial name="_Icon" model='"school"'/><span>เว็บไซต์โรงเรียน<small>ชมข่าวสารและผลงาน</small></span><partial name="_Icon" model='"arrow"'/></a>
+</aside>}
+<main id="mainContent" class="@(signedIn ? "workspace" : "public-workspace")"><partial name="_Notifications"/>@RenderBody()</main>
+<footer class="@(signedIn ? "workspace" : "public-workspace") footer"><span>@branding.ProgramName · พื้นที่แห่งความภาคภูมิใจ</span><span>ปีพุทธศักราช @(DateTime.Today.Year + 543)</span></footer>
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="confirmTitle">ยืนยันการลบข้อมูล</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button></div><div class="modal-body">ข้อมูลจะถูกซ่อนจากระบบ ต้องการดำเนินการต่อหรือไม่?</div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-danger" id="confirmDelete">ยืนยันลบ</button></div></div></div></div>
+<partial name="_MediaViewer"/>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/js/site.js" asp-append-version="true"></script><script type="module" src="~/js/media-viewer.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+<script src="~/js/participant-picker.js" asp-append-version="true"></script>
+</body></html>
+

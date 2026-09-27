@@ -1,0 +1,19 @@
+﻿@model List<Activity>
+@using SchoolPortfolioPR.Controllers
+@{
+    ViewData["Title"] = "ภาพรวม";
+    var cards = (Dictionary<string,int>)ViewBag.Cards;
+    var charts = new Dictionary<string,List<ChartPoint>> { ["กิจกรรมรายเดือน (ปีปัจจุบัน)"] = ViewBag.Month, ["กิจกรรมตามฝ่าย"] = ViewBag.Department, ["ประเภทกิจกรรม"] = ViewBag.Category, ["ระดับรางวัล"] = ViewBag.Level };
+    string[] tones = ["blue", "teal", "violet", "amber", "amber", "rose", "violet", "teal", "blue"];
+    string[] icons = ["activity", "activity", "book", "award", "award", "award", "award", "file", "image"];
+    string[] hints = ["กิจกรรมและโครงการ", "การเรียนรู้เดือนนี้", "เรื่องราวของโรงเรียน", "ความสำเร็จของครู", "ความภูมิใจของนักเรียน", "เวทีระดับชาติ", "เวทีระดับภูมิภาค", "หลักฐานผลงาน", "ภาพแห่งความทรงจำ"];
+    var position = 0;
+}
+<div class="page-head"><div><p class="eyebrow">Workspace</p><h1>พื้นที่ทำงานของฉัน</h1><p class="muted">งานและข้อมูลตามสิทธิ์ของบัญชีคุณ</p></div><a class="btn btn-outline-primary" href="/Reports"><partial name="_Icon" model='"chart"'/> ดูรายงาน</a></div>
+<partial name="_RoleWorkspace" model="(WorkspaceView)ViewBag.Workspace"/>
+<partial name="_HelpBanner"/>
+<div class="welcome-panel"><div><p class="eyebrow">@Thai.Date(DateTime.Today)</p><h2>บันทึกการเรียนรู้ ส่งต่อความภาคภูมิใจ</h2><p>ติดตามข่าวสาร กิจกรรม และผลงานที่เติบโตไปด้วยกัน</p></div><div class="welcome-decoration" aria-hidden="true"><partial name="_Icon" model='"school"'/></div></div>
+<div class="metric-grid">@foreach(var card in cards){var i = position++;<div class="metric-card tone-@tones[i]"><div><p class="metric-label">@card.Key</p><div class="metric">@card.Value.ToString("N0")</div><div class="metric-hint">@hints[i]</div></div><span class="metric-icon"><partial name="_Icon" model="icons[i]"/></span></div>}</div>
+<div class="section-head"><div><h2>มองเห็นความก้าวหน้า</h2><small>สถิติกิจกรรมและความสำเร็จของโรงเรียน</small></div><span class="count-chip">ปี @(DateTime.Today.Year + 543)</span></div>
+<div class="row">@foreach(var chart in charts){var max = Math.Max(1, chart.Value.Select(x => x.Count).DefaultIfEmpty(1).Max());<div class="col-xl-6"><div class="panel chart-panel"><h2>@chart.Key</h2>@foreach(var bar in chart.Value){<div class="bar-row"><span>@bar.Label</span><div class="bar"><span style="width:@(bar.Count * 100 / max)%"></span></div><strong>@bar.Count</strong></div>}@if(chart.Value.Count == 0){<div class="empty-state"><span class="empty-icon"><partial name="_Icon" model='"chart"'/></span><p>ยังไม่มีข้อมูลในหมวดนี้</p></div>}</div></div>}</div>
+<div class="panel"><div class="section-head"><div class="section-title"><span class="section-icon"><partial name="_Icon" model='"activity"'/></span><div><h2>กิจกรรมล่าสุด</h2><small>เรื่องราวและการอัปเดตจากโรงเรียน</small></div></div><a href="/Activities" class="btn btn-sm btn-light">ดูทั้งหมด <partial name="_Icon" model='"arrow"'/></a></div><div class="table-responsive"><table class="table"><thead><tr><th>กิจกรรม</th><th>วันที่จัดกิจกรรม</th><th>สถานะ</th></tr></thead><tbody>@foreach(var a in Model){<tr><td><a asp-controller="Activities" asp-action="Details" asp-route-id="@a.Id">@a.Title</a><small class="d-block">@a.ActivityCode</small></td><td>@Thai.Date(a.ActivityDate)</td><td><span class="badge-status status-@a.Status">@Thai.Status(a.Status)</span></td></tr>}</tbody></table></div></div>

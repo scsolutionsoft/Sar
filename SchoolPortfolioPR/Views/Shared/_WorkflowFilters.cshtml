@@ -1,0 +1,2 @@
+<select name="status" class="form-select w-auto" aria-label="สถานะ"><option value="">ทุกสถานะ</option>@foreach(var state in Enum.GetValues<WorkflowStatus>()){<option value="@state" selected="@(ViewBag.Status != null && (WorkflowStatus)ViewBag.Status == state)">@Thai.Status(state)</option>}</select>
+@if(Roles.Editors.Any(User.IsInRole)){<label class="d-flex align-items-center gap-2"><input type="checkbox" name="mine" value="true" checked="@(ViewBag.Mine == true)"/> เฉพาะที่ฉันสร้าง</label>}

@@ -1,0 +1,22 @@
+@model ParticipantPickerView
+@{var prefix = "picker-"+Model.FieldName; var selected = Model.SelectedIds.ToHashSet();}
+<section class="participant-picker @(Model.IsTeacher ? "picker-teacher" : "picker-student")" data-participant-picker data-kind="@(Model.IsTeacher?"teacher":"student")" aria-labelledby="@(prefix)-title">
+    <div class="participant-heading"><span class="participant-icon"><partial name="_Icon" model='@(Model.IsTeacher ? "people" : "graduate")'/></span><div><h3 id="@(prefix)-title">@Model.Label</h3><p>เลือกได้หลายคน ค้นหาจากชื่อหรือรหัส</p></div><span class="participant-count" data-picked-count>เลือก @selected.Count</span></div>
+    <label for="@Model.FieldName" class="participant-native-label">เลือกรายชื่อ (กด Ctrl หรือ Command เพื่อเลือกหลายคน)</label>
+    <select name="@Model.FieldName" id="@Model.FieldName" class="form-select" multiple size="6" data-participant-source aria-labelledby="@(prefix)-title">
+    @foreach(var p in Model.Choices){<option value="@p.Id" selected="@selected.Contains(p.Id)" data-name="@p.Name" data-code="@p.Code" data-group="@p.GroupKey" data-group-name="@p.GroupName" data-level="@p.Level" data-room="@p.Room">@p.Name · @p.Code · @(Model.IsTeacher?p.GroupName:$"{p.Level} / {p.Room}")</option>}
+    </select>
+    <div class="participant-controls" data-participant-controls hidden>
+        <div class="participant-filters">
+        @if(Model.IsTeacher){<div><label for="@(prefix)-group">กลุ่มสาระการเรียนรู้</label><select id="@(prefix)-group" class="form-select" data-filter-group><option value="">ทุกกลุ่มสาระ</option></select></div>}
+        else{<div><label for="@(prefix)-level">ระดับชั้น</label><select id="@(prefix)-level" class="form-select" data-filter-level><option value="">ทุกระดับชั้น</option></select></div><div><label for="@(prefix)-room">ห้องเรียน</label><select id="@(prefix)-room" class="form-select" data-filter-room><option value="">ทุกห้อง</option></select></div>}
+        </div>
+        <label class="participant-search-label" for="@(prefix)-search">ค้นหาชื่อหรือรหัส@(Model.IsTeacher?"ครู":"นักเรียน")</label>
+        <div class="participant-search"><partial name="_Icon" model='"search"'/><input type="search" id="@(prefix)-search" class="form-control" data-participant-search autocomplete="off" placeholder="พิมพ์ชื่อหรือรหัสเพื่อค้นหาทันที"/></div>
+        <div class="participant-toolbar"><button type="button" class="btn btn-sm btn-outline-primary" data-pick-visible>เลือกที่พบทั้งหมด</button><button type="button" class="btn btn-sm btn-light" data-reset-filters>ล้างตัวกรอง</button><span data-participant-status role="status" aria-live="polite" aria-atomic="true"></span></div>
+        <div class="participant-results" data-participant-results role="group" aria-label="รายชื่อที่ค้นพบ"></div>
+        <button type="button" class="btn btn-sm btn-light w-100 mt-2" data-show-more hidden>แสดงรายชื่อเพิ่ม</button>
+        <div class="participant-selection"><div class="participant-selection-title"><strong>รายชื่อที่เลือก</strong><button type="button" class="btn btn-sm btn-link" data-clear-picked>ล้างที่เลือกทั้งหมด</button></div><div class="participant-chips" data-participant-chips></div><small>รายชื่อที่เลือกจะคงอยู่เมื่อเปลี่ยนตัวกรองหรือค้นหาใหม่</small></div>
+    </div>
+    @Html.ValidationMessage(Model.FieldName, null, new { @class = "text-danger" })
+</section>

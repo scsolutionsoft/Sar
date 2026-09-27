@@ -1,0 +1,2 @@
+@model List<ReportRow>
+<div class="table-responsive"><table class="table"><thead><tr><th>วันที่</th><th>ประเภท</th><th>รายการ</th><th>ฝ่าย</th><th>หมวดหมู่ / ระดับ</th><th>ผู้ร่วม</th></tr></thead><tbody>@foreach(var r in Model){<tr><td>@Thai.Date(r.Date)</td><td>@r.Type</td><td>@r.Title</td><td>@r.Department</td><td>@r.Category</td><td>@r.Participants</td></tr>}</tbody></table></div>@if(Model.Count == 0){<p class="empty">ไม่พบข้อมูลตามตัวกรอง</p>}

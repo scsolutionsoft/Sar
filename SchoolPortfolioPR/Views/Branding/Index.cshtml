@@ -1,0 +1,19 @@
+@model BrandingForm
+@{ViewData["Title"] = "ตั้งค่าโปรแกรม";}
+<div class="page-head"><div><p class="eyebrow">Application settings</p><h1>ตั้งค่าโปรแกรม</h1><p class="muted">ชื่อและโลโก้ที่แสดงในหน้าเข้าสู่ระบบ ส่วนหัว และส่วนท้ายของทุกหน้า</p></div></div>
+<section class="panel branding-settings">
+    <div class="section-title"><span class="section-icon"><partial name="_Icon" model='"settings"'/></span><h2>ชื่อและโลโก้โปรแกรม</h2></div>
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="RowVersion" type="hidden"/>
+        <label asp-for="ProgramName" class="form-label"></label>
+        <input asp-for="ProgramName" class="form-control" maxlength="100" required/>
+        <span asp-validation-for="ProgramName" class="text-danger"></span>
+        <div class="branding-preview my-4"><span class="brand-mark"><partial name="_BrandLogo" model="new BrandingView(Model.ProgramName, Model.CurrentLogoId)"/></span><strong>@Model.ProgramName</strong></div>
+        <label asp-for="Logo" class="form-label">อัปโหลดโลโก้ใหม่</label>
+        <input asp-for="Logo" type="file" class="form-control" accept=".png,.jpg,.jpeg,.webp" aria-describedby="logoHelp"/>
+        <p id="logoHelp" class="form-text">PNG, JPG หรือ WebP ไม่เกิน 2 MB แนะนำภาพสี่เหลี่ยมจัตุรัส พื้นหลังโปร่งใส โลโก้จะแสดงเต็มภาพโดยไม่ตัดขอบ</p>
+        @if(Model.CurrentLogoId.HasValue){<div class="form-check my-3"><input asp-for="RemoveLogo" class="form-check-input"/><label asp-for="RemoveLogo" class="form-check-label">นำโลโก้ออกและใช้ไอคอนเริ่มต้น</label></div>}
+        <div class="form-actions mt-4"><button class="btn btn-primary" type="submit">บันทึกการตั้งค่า</button><a href="/Dashboard" class="btn btn-light">กลับหน้าภาพรวม</a></div>
+    </form>
+</section>

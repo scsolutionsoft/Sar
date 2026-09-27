@@ -1,0 +1,4 @@
+@inject BrandingService Branding
+@model LoginForm
+@{ViewData["Title"] = "เข้าสู่ระบบ"; var branding = await Branding.GetAsync();}
+<div class="panel mx-auto mt-5" style="max-width:460px"><div class="login-brand"><span class="brand-mark"><partial name="_BrandLogo" model="branding"/></span><strong>@branding.ProgramName</strong></div><h1>เข้าสู่ระบบ</h1><p class="muted">จัดการข่าว กิจกรรม และผลงานของโรงเรียน</p><form method="post"><input asp-for="ReturnUrl" type="hidden"/><div asp-validation-summary="All"></div><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" autocomplete="username"/><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="current-password"/><button class="btn btn-primary w-100 mt-4">เข้าสู่ระบบ</button></form></div>
