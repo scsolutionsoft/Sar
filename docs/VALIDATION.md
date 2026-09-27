@@ -41,3 +41,14 @@
 - กำหนด request culture ให้รับวันที่ HTML แบบ Gregorian ISO แม้เครื่อง Windows ใช้ภาษาไทย และแสดง พ.ศ. ผ่าน `Thai.Date` ตามเดิม
 - Publish Release / win-x64 สำเร็จพร้อม assets กระดานข่าวชุดใหม่; ไม่ได้ deploy ไป IIS จริง
 - คู่มือ: `docs/PUBLIC-RELATIONS.md`; ภาพหน้าจอ: `artifacts/ui/pr-home-desktop.png`, `pr-home-mobile.png`, `pr-sample-publication.png`, `pr-board-management.png`, `pr-editor.png`
+
+## ผลงานส่วนตัวทุกบทบาท — 27 กันยายน 2026
+
+- Build solution ผ่าน 0 warnings / 0 errors; unit tests ผ่าน 62 ข้อ
+- ใช้ migration `20260927043848_AddPersonalWorks` กับ Sar สำเร็จ; EF ตรวจว่าไม่มี model changes ค้าง
+- `--my-works` ผ่าน 9 บัญชี ครบ 8 บทบาทและนักเรียนสองคน: เพิ่ม 4 ประเภท ตรวจไบนารีใน SQL, image/PDF popup, cloud link, caption escaping, ตัวกรอง/ค้นหา และมือถือ
+- ทุกบัญชีรวมผู้ดูแลอ่าน/ดาวน์โหลด/แก้ไข/ลบข้อมูลของบัญชีอื่นไม่ได้; ป้องกัน media คนละผลงานและ stale RowVersion; การคัดลอก PDF ซ้ำไม่สร้างซ้ำ และเอกสารในคลังยังอ่านได้หลังลบผลงานต้นทาง
+- `--my-works-forms` ผ่าน: ข้อความภาษาไทย การแก้ข้อมูล อัปโหลดเพิ่มเติม การปฏิเสธชุดไฟล์ผิดโดยไม่บันทึกบางส่วน ยืนยันลบไฟล์ สิทธิ์ไฟล์ถูกยกเลิกหลังลบ และภาพปก/แบบฟอร์มมือถือ
+- `--help-wizard` ผ่านทุกบัญชี พร้อมหัวข้อผลงานส่วนตัว; slug อัตโนมัติยังผ่าน
+- ข้อมูลชั่วคราวของชุดทดสอบถูกลบเฉพาะรายการที่สร้าง; ภาพหน้าจออยู่ใน `artifacts/ui/myworks`
+- Publish Release win-x64 สำเร็จที่ `artifacts/publish`; เว็บรันในเครื่องที่ `http://localhost:5093` และหน้าเข้าสู่ระบบตอบ HTTP 200

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="~/css/branding.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/help.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/myworks.css" asp-append-version="true"/>
     @if(branding.LogoFileId.HasValue){<link rel="icon" href="/Branding/Logo/@branding.LogoFileId"/>}
     <link rel="preload" href="~/fonts/Sarabun-Regular.ttf" as="font" type="font/ttf" crossorigin/>
 </head>
@@ -51,6 +52,7 @@
 <a href="/Awards" data-nav class="nav-item tone-amber"><span class="nav-icon"><partial name="_Icon" model='"award"'/></span>รางวัลและเกียรติบัตร</a>
 @if(!student){<a href="/Portfolios" data-nav class="nav-item tone-teal"><span class="nav-icon"><partial name="_Icon" model='"briefcase"'/></span>แฟ้มผลงานโรงเรียน</a>}
 </section><section class="nav-frame tone-teal" aria-labelledby="navPersonal"><h2 class="nav-frame-title" id="navPersonal"><partial name="_Icon" model='"folder"'/>พื้นที่ส่วนตัว</h2>
+<a href="/MyWorks" data-nav class="nav-item tone-violet"><span class="nav-icon"><partial name="_Icon" model='"award"'/></span>ผลงานของฉัน</a>
 <a href="/Documents" data-nav class="nav-item tone-teal"><span class="nav-icon"><partial name="_Icon" model='"folder"'/></span>คลัง PDF ส่วนตัว</a>
 @if(student){<a href="/Admissions" data-nav class="nav-item tone-violet"><span class="nav-icon"><partial name="_Icon" model='"graduate"'/></span>แฟ้มยื่นเรียนต่อ</a>}
 </section><section class="nav-frame tone-violet" aria-labelledby="navMedia"><h2 class="nav-frame-title" id="navMedia"><partial name="_Icon" model='"megaphone"'/>สื่อและรายงาน</h2>

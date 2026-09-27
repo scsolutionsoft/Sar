@@ -18,6 +18,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Announcement> Announcements => Set<Announcement>();
     public DbSet<PersonalDocument> PersonalDocuments => Set<PersonalDocument>();
+    public DbSet<PersonalWork> PersonalWorks => Set<PersonalWork>();
+    public DbSet<PersonalWorkMedia> PersonalWorkMedia => Set<PersonalWorkMedia>();
     public DbSet<AdmissionPortfolio> AdmissionPortfolios => Set<AdmissionPortfolio>();
     public override Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<TEntity> Remove<TEntity>(TEntity entity)
     {
@@ -53,6 +55,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         b.Entity<ActivityImage>().HasKey(x => new { x.ActivityId, x.FileId });
         b.Entity<ApplicationUser>().HasIndex(x => x.StudentId).IsUnique().HasFilter("[StudentId] IS NOT NULL");
         b.Entity<PersonalDocument>().HasIndex(x => new { x.OwnerId, x.DocumentDate });
+        b.Entity<PersonalWork>().HasIndex(x => new { x.OwnerId, x.Kind, x.WorkDate });
+        b.Entity<PersonalWork>().ToTable(t => t.HasCheckConstraint("CK_PersonalWork_Kind", "[Kind] BETWEEN 0 AND 3"));
+        b.Entity<PersonalWorkMedia>().ToTable(t => t.HasCheckConstraint("CK_PersonalWorkMedia_Source", "([FileId] IS NOT NULL AND [ExternalUrl] IS NULL) OR ([FileId] IS NULL AND [ExternalUrl] IS NOT NULL)"));
         b.Entity<AdmissionPortfolio>().HasIndex(x => x.OwnerId);
         b.Entity<AdmissionPortfolio>().Property(x => x.Gpax).HasPrecision(3, 2);
         b.Entity<PortfolioDocument>().HasKey(x => new { x.AdmissionPortfolioId, x.PersonalDocumentId });
@@ -108,6 +113,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             var p = Expression.Parameter(type.ClrType, "x");
             b.Entity(type.ClrType).HasQueryFilter(Expression.Lambda(Expression.Not(Expression.Property(p, "IsDeleted")), p));
         }
+        b.Entity<PersonalWorkMedia>().HasQueryFilter(x => !x.IsDeleted && !x.PersonalWork.IsDeleted && (x.FileId == null || !x.File!.IsDeleted));
     }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -124,7 +130,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 if (e.State == EntityState.Added) r.CreatedBy = user;
                 if (e.State == EntityState.Deleted) { e.State = EntityState.Modified; r.IsDeleted = true; }
             }
-            var personal = e.Entity is PersonalDocument or AdmissionPortfolio or PortfolioEntry or PortfolioDocument;
+            var personal = e.Entity is PersonalDocument or AdmissionPortfolio or PortfolioEntry or PortfolioDocument or PersonalWork or Models.PersonalWorkMedia;
             object Values(bool old) => e.Properties.Where(p => p.Metadata.Name != "FileData" && p.Metadata.Name != "RowVersion"
                     && (!personal || p.Metadata.IsPrimaryKey() || p.Metadata.Name is "OwnerId" or "AdmissionPortfolioId" or "IsDeleted"))
                 .ToDictionary(p => p.Metadata.Name, p => old ? p.OriginalValue : p.CurrentValue);

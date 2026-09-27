@@ -31,6 +31,7 @@ public class FilesController(ApplicationDbContext db, AccessService access, Anno
         if (access.User.Identity?.IsAuthenticated == true)
         {
             var owner = access.UserId;
+            allowed |= await db.PersonalWorkMedia.AnyAsync(x => x.FileId == id && x.PersonalWork.OwnerId == owner);
             allowed |= await db.PersonalDocuments.AnyAsync(x => x.OwnerId == owner && x.FileId == id);
             if (access.IsStudent) {
                 allowed |= await db.AdmissionPortfolios.AnyAsync(x => x.OwnerId == owner && (x.PortraitId == id || x.PdfFileId == id));

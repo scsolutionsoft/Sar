@@ -2,6 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using SchoolPortfolioPR.Services;
 
+if (args.Contains("--my-works-forms")) { await MyWorksChecks.CheckFormsAsync(); return; }
+if (args.Contains("--my-works")) { await MyWorksChecks.RunAsync(); return; }
 if (args.Contains("--pr")) { await PublicRelationsChecks.RunAsync(args.Contains("--demo-pr")); return; }
 if (args.Contains("--roles")) { await RoleReadinessChecks.RunAsync(args.Contains("--workflow-only")); return; }
 if (args.Contains("--help-wizard")) { await HelpChecks.RunAsync(); return; }

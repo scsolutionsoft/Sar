@@ -1246,6 +1246,140 @@ namespace SchoolPortfolioPR.Migrations
                     b.ToTable("PersonalDocuments", "portfolio");
                 });
 
+            modelBuilder.Entity("SchoolPortfolioPR.Models.PersonalWork", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Achievement")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Organizer")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime>("WorkDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId", "Kind", "WorkDate");
+
+                    b.ToTable("PersonalWorks", "portfolio", t =>
+                        {
+                            t.HasCheckConstraint("CK_PersonalWork_Kind", "[Kind] BETWEEN 0 AND 3");
+                        });
+                });
+
+            modelBuilder.Entity("SchoolPortfolioPR.Models.PersonalWorkMedia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExternalUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<Guid?>("FileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PersonalWorkId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("PersonalWorkId");
+
+                    b.ToTable("PersonalWorkMedia", "portfolio", t =>
+                        {
+                            t.HasCheckConstraint("CK_PersonalWorkMedia_Source", "([FileId] IS NOT NULL AND [ExternalUrl] IS NULL) OR ([FileId] IS NULL AND [ExternalUrl] IS NOT NULL)");
+                        });
+                });
+
             modelBuilder.Entity("SchoolPortfolioPR.Models.PortfolioDocument", b =>
                 {
                     b.Property<int>("AdmissionPortfolioId")
@@ -2005,6 +2139,35 @@ namespace SchoolPortfolioPR.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("SchoolPortfolioPR.Models.PersonalWork", b =>
+                {
+                    b.HasOne("SchoolPortfolioPR.Models.ApplicationUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("SchoolPortfolioPR.Models.PersonalWorkMedia", b =>
+                {
+                    b.HasOne("SchoolPortfolioPR.Models.FileObject", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SchoolPortfolioPR.Models.PersonalWork", "PersonalWork")
+                        .WithMany("Media")
+                        .HasForeignKey("PersonalWorkId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("File");
+
+                    b.Navigation("PersonalWork");
+                });
+
             modelBuilder.Entity("SchoolPortfolioPR.Models.PortfolioDocument", b =>
                 {
                     b.HasOne("SchoolPortfolioPR.Models.AdmissionPortfolio", "AdmissionPortfolio")
@@ -2163,6 +2326,11 @@ namespace SchoolPortfolioPR.Migrations
                     b.Navigation("Files");
 
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("SchoolPortfolioPR.Models.PersonalWork", b =>
+                {
+                    b.Navigation("Media");
                 });
 #pragma warning restore 612, 618
         }

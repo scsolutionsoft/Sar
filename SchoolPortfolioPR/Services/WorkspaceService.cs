@@ -25,6 +25,7 @@ public class WorkspaceService(ApplicationDbContext db, AccessService access)
         if(access.IsAdmin)model.Links.Add(new("ตั้งค่าโปรแกรม","เปลี่ยนชื่อและโลโก้ที่แสดงในระบบ","/Branding"));
         if(access.User.IsInRole("SuperAdmin"))model.Links.Add(new("ผู้ใช้และสิทธิ์","สร้างบัญชี กำหนดบทบาทและฝ่าย","/Users"));
         if(access.IsStudent)model.Links.Add(new("สร้างแฟ้มยื่นเรียนต่อ","เลือกธีม จัดผลงาน และส่งออก PDF","/Admissions"));
+        model.Links.Insert(0,new("ผลงานของฉัน","เพิ่มกิจกรรม รางวัล เกียรติบัตร และอัลบั้มภาพส่วนตัว","/MyWorks"));
         model.Links.Add(new("คลัง PDF ของฉัน",$"เอกสารส่วนตัว {model.Documents} รายการ","/Documents"));
         model.Links.Add(new("คลังภาพกิจกรรม","ชมภาพพร้อมคำบรรยายและอัลบั้มจากคลาวด์","/Gallery"));
         if(!access.IsEditor&&!access.IsStudent)model.Links.Add(new("อ่านวารสารโรงเรียน","ข่าวและผลงานที่เปิดเผยแพร่","/Publications"));
